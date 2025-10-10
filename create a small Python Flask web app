@@ -1,0 +1,70 @@
+Go to :Create ec2 instance >> Install docker  >> start docker 
+### Docker must be installed and running
+cd /home
+mkdir flask-docker-app/  
+### creates a file, Makes a new directory called flask-docker-app to keep your app files organized
+cd flask-docker-app/   
+### Move Into That Folder, Enters the newly created project directory.
+touch app.py
+touch Dockerfile  
+### Create Application File and Dockerfile
+ls -ltrh     -- List Files  
+### ls: list files
+### -l: long format, -t: sort by time, -r: reverse order, -h: human readable sizes
+### You should see: app.py and Dockerfile as result 
+### Add Flask Code to app.py:
+vi app.py   
+### Press i to insert, and add this simple Flask app given below 
+
+Code : 
+from flask import Flask
+app = Flask(_name_)
+@app.route("/")
+def home():
+    return "Hello from Flask in Docker!"
+
+if _name_ == "_main_":
+    app.run(host="0.0.0.0", port=5000)
+
+### Note : Make sure you have space before app.run refer above code 
+---------       -------       ---------
+Press Esc, then type :wq to save and exit
+host="0.0.0.0" → so it works inside Docker container.
+port=5000 → Flask default port.
+vi Dockerfile  – writing some code to dockerfile
+### apply this code given below 
+
+code : 
+# Use official Python image
+FROM python:3.9-slim
+# Set working directory inside the container
+WORKDIR /app
+# Copy the local files to container
+COPY . /app
+# Install Flask inside container
+RUN pip install flask
+# Run the Flask app
+CMD ["python", "app.py"]
+--------        ------------- 
+esc → :wq -- Save and exit with
+now, build a docker image :
+docker build -t flask-docker-app .
+### -t flask-docker-app: tags the image with name flask-docker-app
+###. means: use current directory as build context (where Dockerfile is)
+
+### You should see Docker pulling Python, installing Flask, and building the image.
+docker images   
+verify image created or not 
+docker run -d -p 5000:5000 flask-docker-app
+run this 
+-d: detached mode (runs in background)
+-p 5000:5000: maps port 5000 from container to host
+Allocate security group :
+Go to sg >> custom tcp >> port range 5000>> anywhere 0.0.0.0/0 save 
+Then , copy pub ip address from your instance paste in chrome for results 
+You should see: Hello from Flask in Docker!
+If it doesn’t load trouble shoot:
+Check if port 5000 is allowed in your EC2 security group
+Go to sg >> custom tcp >> port range 5000>> anywhere 0.0.0.0/0 save 
+
+Check with docker ps to make sure the container is running
