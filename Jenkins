@@ -1,0 +1,18 @@
+create ec2 server in instance type of t3.medium – create key pair – create 
+Go to created ec2  >> security >> sg id >>  inbound rule >> ssh in default >> add rule custom tcp or all tcp – port range: 8080 – source : anywhere ipv4 
+
+### Adds the official Jenkins stable repository to your system so yum/dnf can find the Jenkins package
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+### Imports the GPG signing key for the Jenkins repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum upgrade
+###JAVA INSTALLATION
+sudo yum install -y java-17-amazon-corretto
+Java --version
+sudo yum install -y Jenkins
+sudo systemctl enable jenkins
+systemctl enable jenkins
+### Jenkins will begin listening on port 8080 by default and generate an initial admin password
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
